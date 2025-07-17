@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Instalar Nginx
+      package:
+        name: nginx
+        state: present
+    
+    - name: Iniciar Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes

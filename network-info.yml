@@ -1,0 +1,22 @@
+---
+- name: Información de red detallada
+  hosts: webservers
+  
+  tasks:
+    - name: Mostrar todas las IPs
+      debug:
+        msg: |
+          🌐 Información de red:
+          📍 Default IP: {{ ansible_default_ipv4.address }}
+          📍 Host IP (acceso): {{ ansible_host }}
+          📍 Todas las IPs: {{ ansible_all_ipv4_addresses }}
+          🔗 Interfaces: {{ ansible_interfaces }}
+    
+    - name: Mostrar IP específica (eth1)
+      debug:
+        msg: "📍 IP Host-only (eth1): {{ ansible_eth1.ipv4.address }}"
+      when: ansible_eth1 is defined
+    
+    - name: Mostrar IP que usamos para acceder
+      debug:
+        msg: "✅ Nginx accesible en: http://{{ ansible_host }}"

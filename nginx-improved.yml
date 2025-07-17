@@ -1,0 +1,25 @@
+---
+- name: Nginx con IP de acceso correcta
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Instalar Nginx
+      package:
+        name: nginx
+        state: present
+    
+    - name: Iniciar Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Mostrar información completa
+      debug:
+        msg: |
+          ✅ Nginx funcionando!
+          🌐 IP interna (default): {{ ansible_default_ipv4.address }}
+          🌐 IP de acceso (host-only): {{ ansible_host }}
+          🔗 Acceder desde tu PC: http://{{ ansible_host }}
+          📊 Todas las IPs: {{ ansible_all_ipv4_addresses | join(', ') }}

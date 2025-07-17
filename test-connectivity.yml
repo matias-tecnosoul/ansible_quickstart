@@ -1,0 +1,29 @@
+---
+- name: Test de conectividad
+  hosts: webservers
+  
+  tasks:
+    - name: Probar conexión HTTP en IP por defecto
+      uri:
+        url: "http://{{ ansible_default_ipv4.address }}"
+        method: GET
+        status_code: 200
+      register: test_default_ip
+      ignore_errors: yes
+    
+    - name: Probar conexión HTTP en IP de host
+      uri:
+        url: "http://{{ ansible_host }}"
+        method: GET  
+        status_code: 200
+      register: test_host_ip
+      ignore_errors: yes
+    
+    - name: Mostrar resultados de conectividad
+      debug:
+        msg: |
+          🧪 Test de conectividad:
+          📍 {{ ansible_default_ipv4.address }}: {{ 'OK' if test_default_ip.status == 200 else 'FAIL' }}
+          📍 {{ ansible_host }}: {{ 'OK' if test_host_ip.status == 200 else 'FAIL' }}
+          
+          💡 Desde tu PC usa: http://{{ ansible_host }}

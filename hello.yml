@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Crear archivo de prueba
+      file:
+        path: /tmp/hello-ansible.txt
+        state: touch
+    
+    - name: Mostrar mensaje
+      debug:
+        msg: "¡Ansible está funcionando!"
