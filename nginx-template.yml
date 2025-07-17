@@ -1,0 +1,38 @@
+---
+- name: Nginx con template personalizable
+  hosts: webservers
+  become: yes
+  
+  vars:
+    site_title: "Mi Servidor Ansible"
+    site_description: "Servidor web configurado automáticamente"
+    admin_email: "admin@miservidor.com"
+    company_name: "Mi Empresa"
+    
+  tasks:
+    - name: Instalar Nginx
+      package:
+        name: nginx
+        state: present
+    
+    - name: Crear página desde template
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+        backup: yes
+    
+    - name: Iniciar Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Mostrar información
+      debug:
+        msg: |
+          ✅ {{ site_title }} desplegado
+          🌐 URL: http://{{ ansible_host }}
+          📧 Admin: {{ admin_email }}

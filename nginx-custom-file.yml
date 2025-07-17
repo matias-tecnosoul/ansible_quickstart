@@ -1,0 +1,47 @@
+---
+- name: Nginx con archivo HTML externo
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Instalar Nginx
+      package:
+        name: nginx
+        state: present
+    
+    - name: Copiar archivo HTML personalizado
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+        backup: yes
+    
+    - name: Copiar archivos CSS (si existen)
+      copy:
+        src: files/style.css
+        dest: /var/www/html/style.css
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      ignore_errors: yes
+    
+    - name: Copiar imágenes (si existen)
+      copy:
+        src: files/images/
+        dest: /var/www/html/images/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      ignore_errors: yes
+    
+    - name: Iniciar Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Mostrar mensaje final
+      debug:
+        msg: "🌐 Sitio web disponible en: http://{{ ansible_host }}"
